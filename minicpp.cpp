@@ -1,7 +1,7 @@
 
 
 #include <bits/stdc++.h>
-// #include <windows.h>
+#include <windows.h>
 using namespace std;
 
 
@@ -11,16 +11,16 @@ void welcome(){
 }
 
 
-//Wait function
-// void wait_func()
-// {
-//   cout<<"Please Wait ";
-//   for(int i = 0 ; i < 3 ; i++){
-//     cout<<".";
-//     Sleep(1000);
-//   }
-//   cout << endl ;
-// }
+// Wait function
+void wait_func()
+{
+  cout<<"Please Wait ";
+  for(int i = 0 ; i < 3 ; i++){
+    cout<<".";
+    Sleep(1000);
+  }
+  cout << endl ;
+}
 
 
 bool verify_password(char *p)
@@ -52,10 +52,13 @@ bool verify_password(char *p)
   return true;
 }
 
+
+// sign-up function to create a new profile 
 void sign_up(string &password, string &contact_num,string &name){
   cout << "\t\t\t     ----- SIGN UP YOUR NEW ACCOUNT ----- \n" << endl ;
   cout << "Enter your Name : ";
   cin >> name ;
+  // clearing buffer
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
   cout << "Enter your contact number : " ;
   cin >> contact_num ;
@@ -64,11 +67,14 @@ void sign_up(string &password, string &contact_num,string &name){
   cout << "Create a password(must be minimum 8 characters , must include special character , upper case and lower case alphabets and number) : \n" ;
   cin >> password ;
   cout << endl ;
+
+  // converitng string to character array
   char p[50];
   for(int i = 0 ; i < password.length() ; i++ )
   {
     p[i] = password[i] ;
   }
+ // calling password_verification func() to check password validity
  bool result = verify_password(p);
   if (result) printf("Verified password!\n\n");
   else {
@@ -77,7 +83,9 @@ void sign_up(string &password, string &contact_num,string &name){
   }
 }
 
+//log-in function to match the user-entered credentials with sign-up credentials
 void log_in(string &password, string &contact_num, string &address,string &name){
+
   string contact_verify , password_verify ;
   cout << "\t\t\t---------- LOG IN TO YOUR ACCOUNT ---------- \n" << endl ;
   label:
@@ -87,13 +95,14 @@ void log_in(string &password, string &contact_num, string &address,string &name)
   cin >> password_verify ;
   cout << endl ;
   cout << endl ;
+
+  // clearing buffer
   if((contact_num==contact_verify)&&(password==password_verify)){
     cout << "Account Verified. Logging in ...";
     cout << endl ;
-    //wait_func();
+    wait_func();
     cout << "Welcome " << name << endl << endl  ;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
- 
     cout << "Enter your delivery address : " ;
     cin >> address ;   
   }
@@ -104,7 +113,12 @@ void log_in(string &password, string &contact_num, string &address,string &name)
 
 }
 
+
+// menu_card func() to print the menu and take the order 
+
 void menu_card(vector<string> &fmenu,vector<int> &price, vector<string> &cart_items,vector <int> &cart_prices,vector <int> &cart_quantity,int quantity, int order){
+
+// vreating infinite loop so that user can choose multiple times
 
   while(true)
   {
@@ -134,18 +148,24 @@ void menu_card(vector<string> &fmenu,vector<int> &price, vector<string> &cart_it
      
         cout<< endl ;
 
+        // storing the selected items , their price and quantity in 3 different vectorrs :
+        // cart_items , cart_prices and cart_quantity
         cart_items.push_back(fmenu[order - 1]) ;
         cart_prices.push_back(price[order - 1]) ;
         cart_quantity.push_back(quantity) ;
        
-        
+        // asking the user whether he/she wants to add more food items to their list
         cout << "Would you like to order anything else ? \n\n" ;
         cout << "Press 1 for Yes or Press 0 for No.\n" ;
         cin>>choice ;
         cout<<endl;
+
+        // if chosen 1 , program must give control to label and should take more orders
         if(choice){
           goto label;
         }
+
+        // otherwise out of the loop and menu_card func()
         else{
           break;
         }
@@ -154,8 +174,9 @@ void menu_card(vector<string> &fmenu,vector<int> &price, vector<string> &cart_it
 
 }
 
+// coupon_apply func() to apply 15% coupon 
 
-void payment(int &total_price){
+void coupon_apply(int &total_price){
   string coupon ;
   cout<< "Enter FIRST15 to get 15% off on your first order .\n\n";
   cin >> coupon ;
@@ -166,9 +187,14 @@ void payment(int &total_price){
    
 }
 
-
+// shows final bill with items , their price and quantity in proper formatting
+// also calculates total amount 
 void show_payment_bill(vector<string> &cart_items,vector <int> &cart_prices,vector <int> &cart_quantity){
+
   int total_price = 0 ;
+
+   // displaying the bill
+
   cout << "--------------- YOUR BILL ---------------";
   cout << endl ;
   cout << endl ;
@@ -176,6 +202,7 @@ void show_payment_bill(vector<string> &cart_items,vector <int> &cart_prices,vect
   cout << endl ;
   cout << endl ;
 
+ 
   for(int i = 0 ; i < cart_items.size() ; i++ )
   {
      total_price = total_price + cart_prices[i]*cart_quantity[i] ;
@@ -193,6 +220,10 @@ void show_payment_bill(vector<string> &cart_items,vector <int> &cart_prices,vect
 
       cout << endl ;
       cout << endl ;
+      // giving user 3 options to choose from 
+      // applying coupon which gives control to coupon_apply func()
+      // make payment redirects to payment gateway
+      // exit terminates the program
       options :
       cout << "(C) APPLY COUPON\t(P) MAKE PAYMENT\t (E) EXIT" ;
       cout << endl ;
@@ -217,7 +248,7 @@ void show_payment_bill(vector<string> &cart_items,vector <int> &cart_prices,vect
 
 }
 
-
+// main_function()
 int main()
 {
   string password ;
@@ -261,15 +292,12 @@ int main()
 
 char inp ;
 
+// calling the functions in required order 
 
 welcome();
-
-
-
 sign_up(password,contact_num,name);
-//wait_func();
+wait_func();
 log_in(password,contact_num,address,name);
-
 menu_card(fmenu,price,cart_items,cart_prices,cart_quantity,quantity,order);
 
 options :
